@@ -1,152 +1,169 @@
 using System;
 using UnityEngine;
 
-namespace UnityStandardAssets.Utility
+public class WaypointProgressTracker : MonoBehaviour
 {
-    public class WaypointProgressTracker : MonoBehaviour
+
+    // A reference to the waypoint-based route we should follow
+    [SerializeField] private Waypoint waypoint; 
+
+    /// <summary>
+    /// Sets the waypoint that the drone will use to move
+    /// </summary>
+    /// <param name="wpc">Waypoint used by the drone. It can be a SinglePoint or a WaypointCircuit</param>
+    public void setWaypoint(Waypoint wpc) {
+        waypoint = wpc;
+        progressDistance = 0;
+        if (!wpc.isCircuit())
+            ((singlePoint)waypoint).setHome(transform);
+        else
+            hasToRecalculateDistance();
+    }
+
+    [SerializeField] private float lookAheadForTargetOffset = 5;
+    [SerializeField] private float maxDistFromCircuit = 1;
+    [SerializeField] private float overallDistanceFromTrajectory = 0;
+    [SerializeField] private float distanceOfPointToLookAt = 8;   
+
+    public Transform target;
+    private float progressDistance; // The progress round the route
+    /// <summary>
+    /// Gets the position of the drone in the circuit
+    /// </summary>
+    /// <returns>the position of the drone in the circuit</returns>
+    public Vector3 getRoutePosition() { return waypoint.GetRoutePosition(progressDistance); }    
+
+    float timer = 0.1f;
+    float actualTimer = 1;
+
+    /// <summary>
+    /// We specify a rect and a point outside the rect. This function return the point INSIDE the rect, 
+    /// that forms, with the point specified, a rect perpendicular to the one passed as argument
+    /// </summary>
+    /// <param name="ptR1">First point of the rect</param>
+    /// <param name="ptR2">Second point of the rect</param>
+    /// <param name="point">Point outside of the rect, that we want to find the corresponding perpendicular point</param>
+    /// <returns>A point that forms a rect, with the point passed as argument, perpendicolar to the rect specified </returns>
+    private Vector3 getPerpendicolarPoint(Vector3 ptR1, Vector3 ptR2, Vector3 point)
     {
-        // This script can be used with any object that is supposed to follow a
-        // route marked out by waypoints.
+        Vector2 A = new Vector2(ptR1.x, ptR1.z);
+        Vector2 B = new Vector2(ptR2.x, ptR2.z);
+        Vector2 C = new Vector2(point.x, point.z);
 
-        // This script manages the amount to look ahead along the route,
-        // and keeps track of progress and laps.
+        float m = (B.y - A.y) / (B.x - A.x);
+        float k = m * C.y + C.x;       
+        float n = B.y - A.y;
+        float o = B.x - A.x;
+        float l = o * A.y - n * A.x;
 
-        [SerializeField] private WaypointCircuit circuit; // A reference to the waypoint-based route we should follow
+        float newX = -(l * m - k * o) / (o + m * n);
+        float newY = (k * n + l) / (o + m * n);
 
-        [SerializeField] private float lookAheadForTargetOffset = 5;
-        // The offset ahead along the route that the we will aim for
+        // we do not consider the Y axes, so we always use the same as 'point' as they were all in the same Y plane
+        return new Vector3(newX, point.y, newY);
+    }
 
-        [SerializeField] private float lookAheadForTargetFactor = .1f;
-        // A multiplier adding distance ahead along the route to aim for, based on current speed
+    private bool needToRecalculateDistanceFromCircuit = false;
+    /// <summary>
+    /// In some cases is necessary to recalculate the actual distance 
+    /// instead of using the old one and summing to it the distance traveled.
+    /// This function forces the recalculation.
+    /// </summary>
+    public void hasToRecalculateDistance() { needToRecalculateDistanceFromCircuit = true; }
 
-        [SerializeField] private float lookAheadForSpeedOffset = 10;
-        // The offset ahead only the route for speed adjustments (applied as the rotation of the waypoint target transform)
-
-        [SerializeField] private float lookAheadForSpeedFactor = .2f;
-        // A multiplier adding distance ahead along the route for speed adjustments
-
-        [SerializeField] private ProgressStyle progressStyle = ProgressStyle.SmoothAlongRoute;
-        // whether to update the position smoothly along the route (good for curved paths) or just when we reach each waypoint.
-
-        [SerializeField] private float pointToPointThreshold = 4;
-        // proximity to waypoint which must be reached to switch target to next waypoint : only used in PointToPoint mode.
-
-        public enum ProgressStyle
+    /// <summary>
+    /// Function called each frame
+    /// </summary>
+    private void Update()
+    {
+        // if we are using a WaypointCircuit we recalculate the position of the objects used to navigate it
+        if (waypoint.isCircuit())
         {
-            SmoothAlongRoute,
-            PointToPoint,
-        }
+            if (actualTimer >= 0)
+                actualTimer -= Time.deltaTime;
+            else {
+                actualTimer += timer;
 
-        // these are public, readable by other objects - i.e. for an AI to know where to head!
-        public WaypointCircuit.RoutePoint targetPoint { get; private set; }
-        public WaypointCircuit.RoutePoint speedPoint { get; private set; }
-        public WaypointCircuit.RoutePoint progressPoint { get; private set; }
+                // calculating test-Points in circuit
+                int nOfPoints = (int)lookAheadForTargetOffset;
+                Vector3[] pBetween = waypoint.pointsBetween(getRoutePosition(), target.transform.position, nOfPoints);
 
-        public Transform target;
+                // calculating the matching points in the line between the drone and the target
+                Vector3[] destPoints = new Vector3[pBetween.Length];
+                for (int i = 0; i < pBetween.Length; i++)
+                    destPoints[i] = getPerpendicolarPoint(transform.position, target.position, pBetween[i]);
 
-        private float progressDistance; // The progress round the route, used in smooth mode.
-        private int progressNum; // the current waypoint number, used in point-to-point mode.
-        private Vector3 lastPosition; // Used to calculate current speed (since we may not have a rigidbody component)
-        private float speed; // current speed of this object (calculated from delta since last frame)
+                // calculating sum of distances between the test point and it's matching point
+                overallDistanceFromTrajectory = 0;
+                for (int i = 0; i < pBetween.Length - 1; i++)
+                    overallDistanceFromTrajectory += Vector3.Distance(pBetween[i], destPoints[i]);
 
-        // setup script properties
-        private void Start()
-        {
-            // we use a transform to represent the point to aim for, and the point which
-            // is considered for upcoming changes-of-speed. This allows this component
-            // to communicate this information to the AI without requiring further dependencies.
+                // so we increase o decrease the distance of the target 
+                if (overallDistanceFromTrajectory > maxDistFromCircuit)
+                    lookAheadForTargetOffset -= 0.25f;
+                else
+                    lookAheadForTargetOffset += 0.25f;
+            
 
-            // You can manually create a transform and assign it to this component *and* the AI,
-            // then this component will update it, and the AI can read it.
-            if (target == null)
-            {
-                target = new GameObject(name + " Waypoint Target").transform;
+                lookAheadForTargetOffset = droneSettings.keepOnRange(lookAheadForTargetOffset, 3f, 12f);            
             }
 
-            Reset();
-        }
+            // determine the position we should currently be aiming for
+            // (this is different to the current progress position, it is a certain amount ahead along the route)        
+            target.position = waypoint.GetRoutePoint(progressDistance + lookAheadForTargetOffset).position;
+            target.rotation = Quaternion.LookRotation(waypoint.GetRoutePoint(progressDistance).direction);
+            // get our current progress along the route       
 
-
-        // reset the object to sensible values
-        public void Reset()
-        {
-            progressDistance = 0;
-            progressNum = 0;
-            if (progressStyle == ProgressStyle.PointToPoint)
+            needToRecalculateDistanceFromCircuit = Vector3.Distance(transform.position, getRoutePosition()) > 10 ? true : needToRecalculateDistanceFromCircuit;
+            if (needToRecalculateDistanceFromCircuit)
             {
-                target.position = circuit.Waypoints[progressNum].position;
-                target.rotation = circuit.Waypoints[progressNum].rotation;
-            }
-        }
-
-
-        private void Update()
-        {
-            if (progressStyle == ProgressStyle.SmoothAlongRoute)
-            {
-                // determine the position we should currently be aiming for
-                // (this is different to the current progress position, it is a a certain amount ahead along the route)
-                // we use lerp as a simple way of smoothing out the speed over time.
-                if (Time.deltaTime > 0)
-                {
-                    speed = Mathf.Lerp(speed, (lastPosition - transform.position).magnitude/Time.deltaTime,
-                                       Time.deltaTime);
-                }
-                target.position =
-                    circuit.GetRoutePoint(progressDistance + lookAheadForTargetOffset + lookAheadForTargetFactor*speed)
-                           .position;
-                target.rotation =
-                    Quaternion.LookRotation(
-                        circuit.GetRoutePoint(progressDistance + lookAheadForSpeedOffset + lookAheadForSpeedFactor*speed)
-                               .direction);
-
-
-                // get our current progress along the route
-                progressPoint = circuit.GetRoutePoint(progressDistance);
-                Vector3 progressDelta = progressPoint.position - transform.position;
-                if (Vector3.Dot(progressDelta, progressPoint.direction) < 0)
-                {
-                    progressDistance += progressDelta.magnitude*0.5f;
-                }
-
-                lastPosition = transform.position;
+                progressDistance = waypoint.getNearestPointTo(transform.position);
+                needToRecalculateDistanceFromCircuit = false;
             }
             else
             {
-                // point to point mode. Just increase the waypoint if we're close enough:
-
-                Vector3 targetDelta = target.position - transform.position;
-                if (targetDelta.magnitude < pointToPointThreshold)
-                {
-                    progressNum = (progressNum + 1)%circuit.Waypoints.Length;
-                }
-
-
-                target.position = circuit.Waypoints[progressNum].position;
-                target.rotation = circuit.Waypoints[progressNum].rotation;
-
-                // get our current progress along the route
-                progressPoint = circuit.GetRoutePoint(progressDistance);
+                WaypointCircuit.RoutePoint progressPoint = waypoint.GetRoutePoint(progressDistance);
                 Vector3 progressDelta = progressPoint.position - transform.position;
                 if (Vector3.Dot(progressDelta, progressPoint.direction) < 0)
                 {
-                    progressDistance += progressDelta.magnitude;
+                    progressDistance += progressDelta.magnitude * 0.5f;
                 }
-                lastPosition = transform.position;
             }
+            
+            // setting drones variables
+            gameObject.GetComponent<droneMovementController>().setRoutePos(getRoutePosition());
+            float distToRoute = Vector3.Distance(transform.position, getRoutePosition());
+            gameObject.GetComponent<droneMovementController>().setLookingPoint(waypoint.GetRoutePosition(progressDistance + distanceOfPointToLookAt - distToRoute));
+            gameObject.GetComponent<droneMovementController>().stayOnFixedPoint = false;
+        }
+        else
+        {
+            Vector3 routePos = getRoutePosition();
+
+            // setting drones variables
+            gameObject.GetComponent<droneMovementController>().setRoutePos(routePos);
+            target.position = getRoutePosition();// + Vector3.forward;
+            gameObject.GetComponent<droneMovementController>().stayOnFixedPoint = true;         
+            gameObject.GetComponent<droneMovementController>().setLookingPoint(((singlePoint) waypoint).getLookingAtPoint());
+    
         }
 
+        
+        
+    }
 
+    // --- function used to draw lines and shapes in the editor-mode
+
+    public bool drawGizoms = true;
         private void OnDrawGizmos()
         {
-            if (Application.isPlaying)
-            {
-                Gizmos.color = Color.green;
+            if (Application.isPlaying && drawGizoms)
+            { 
+                Gizmos.color = Color.blue;
                 Gizmos.DrawLine(transform.position, target.position);
-                Gizmos.DrawWireSphere(circuit.GetRoutePosition(progressDistance), 1);
-                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(waypoint.GetRoutePosition(progressDistance), 0.25f);
+                Gizmos.color = Color.cyan;
                 Gizmos.DrawLine(target.position, target.position + target.forward);
             }
         }
     }
-}
