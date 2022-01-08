@@ -63,4 +63,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Second.unity
     guid: b58769fab911f4e5abad5e4c141eb555
+  - enabled: 1
+    path: Assets/Scenes/Desert Town.unity
+    guid: dbc5f1a7a4911184d95b8c6f725544e7
   m_configObjects: {}
