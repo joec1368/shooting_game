@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class changescene : MonoBehaviour , IPointerClickHandler
 {
+    public int number = 2;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,15 +17,17 @@ public class changescene : MonoBehaviour , IPointerClickHandler
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
         
     }
-    public void chaneroom()
-    {
-        
-    }
+    
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(number);
     }
+   
 }

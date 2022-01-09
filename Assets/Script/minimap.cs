@@ -8,22 +8,27 @@ public class minimap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = gameObject.GetComponentInParent<Transform>();
+        //player = gameObject.GetComponentInParent<Transform>();
         
-        Transform position = gameObject.GetComponent<Transform>();
-        position = player;
-        Camera camera = gameObject.GetComponent<Camera>();
+        //Transform position = gameObject.GetComponent<Transform>();
+        //position = player;
+        //Camera camera = gameObject.GetComponent<Camera>();
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        player = gameObject.GetComponentInParent<Transform>();
+        // player = gameObject.GetComp<Transform>();
 
-        Transform position = gameObject.GetComponent<Transform>();
-        position = player;
-        
+        // Transform position = gameObject.GetComponent<Transform>();
+        float x = player.position.x;
+        float z = player.position.z;
+        float y = gameObject.transform.position.y;
+
+      
+        gameObject.transform.position = new Vector3(x, y, z);
+        gameObject.transform.eulerAngles = new Vector3(90f, player.eulerAngles.y, 0f);
 
 
     }
