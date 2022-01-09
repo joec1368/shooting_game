@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
+    private float score = 10f;
+
     public void Hit()
     {
-        Score.AddScore(10f);
+        Score.AddScore(score);
     }
 }
