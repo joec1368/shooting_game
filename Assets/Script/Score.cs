@@ -10,13 +10,14 @@ public class Score : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        text.text = "Score : " + score.ToString();
+        text = GetComponent<Text>();
+        text.text = "Score: " + score.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        text.text = "Score : " + score.ToString();
+        text.text = "Score: " + score.ToString();
     }
 
     public static void AddScore(float amount)
