@@ -108,7 +108,8 @@ public class Character_Controller : MonoBehaviour
             Debug.Log("Hit " + hit.transform.name);
 
             Target target = hit.transform.GetComponent<Target>();
-            target.Hit();
+            if (target != null)
+                target.Hit();
 
             GameObject impactGO = Instantiate(impact, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGO, 2f);
