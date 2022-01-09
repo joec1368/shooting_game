@@ -2515,7 +2515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 856133865}
   impact: {fileID: 1000010355441670, guid: 02a509a7fa70ed740ba4197e20c5d32d, type: 3}
-  muzzle: {fileID: 0}
+  muzzle: {fileID: 1535041745}
   damage: 10
   firerate: 15
   range: 100
@@ -4018,6 +4018,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 468444, guid: e3deda9cbdf55484a80b96efb01909cd, type: 3}
   m_PrefabInstance: {fileID: 2102605548}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1535041745 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198000012944515248, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
+  m_PrefabInstance: {fileID: 1181587538}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1535936550
 GameObject:
