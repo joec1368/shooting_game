@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5229661888883167421}
   - component: {fileID: 5229661888883167408}
   - component: {fileID: 5229661888883167423}
-  - component: {fileID: 5229661888883167422}
   - component: {fileID: 5995133775937898442}
+  - component: {fileID: 4864567552718783613}
   m_Layer: 0
   m_Name: Target1
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5229661888883167420}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -5.0833206, y: 0, z: 0.07820892}
-  m_LocalScale: {x: 2.5, y: 0.03, z: 2.5}
+  m_LocalScale: {x: 2.5, y: 0.03, z: 2.4999998}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -83,22 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!58 &5229661888883167422
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5229661888883167420}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0024552345, y: 3291200}
-  serializedVersion: 2
-  m_Radius: 0.49946976
 --- !u!114 &5995133775937898442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,3 +95,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 866aff16b89e7d8439d0cf446a1eaadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!64 &4864567552718783613
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5229661888883167420}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
