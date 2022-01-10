@@ -18,6 +18,8 @@ public class camera_move : MonoBehaviour
         {
             transform.position = new Vector3(1145.347f, 199.5274f, 272.9381f);
         }
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
     }
 }
