@@ -28,7 +28,7 @@ public class bullet_Bar : MonoBehaviour
         slider.value = bullet_now;
         //slider.value = 10f;
         text.text = bullet_now.ToString();
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetMouseButton(0))
         {
             bullet_now--;
             if(bullet_now == 0)
@@ -47,6 +47,9 @@ public class bullet_Bar : MonoBehaviour
                 temp = 0;
                 fill.enabled = true;
             }
+        }
+        if(Input.GetKeyDown(KeyCode.R)){
+            bullet_now = slider.maxValue;
         }
     }
 }
