@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6408185289489327997}
   - component: {fileID: 6408185289489327998}
   - component: {fileID: 6408185289489327999}
+  - component: {fileID: 6581985}
   m_Layer: 0
   m_Name: back
   m_TagString: Untagged
@@ -93,9 +94,21 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &6581985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408185289489327985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866aff16b89e7d8439d0cf446a1eaadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6408185290469735974
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,6 +121,7 @@ GameObject:
   - component: {fileID: 6408185290469735970}
   - component: {fileID: 6408185290469735971}
   - component: {fileID: 6408185290469735972}
+  - component: {fileID: 319124734}
   m_Layer: 0
   m_Name: front
   m_TagString: Untagged
@@ -189,9 +203,21 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &319124734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408185290469735974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866aff16b89e7d8439d0cf446a1eaadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6408185290650800990
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +229,9 @@ GameObject:
   - component: {fileID: 6408185290650800989}
   - component: {fileID: 6408185290650800986}
   - component: {fileID: 6408185290650800987}
-  - component: {fileID: 6408185290650800988}
+  - component: {fileID: 1385113179}
+  - component: {fileID: 1385113182}
+  - component: {fileID: 1385113183}
   m_Layer: 0
   m_Name: Target2
   m_TagString: Untagged
@@ -220,7 +248,7 @@ Transform:
   m_GameObject: {fileID: 6408185290650800990}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 0.03}
+  m_LocalScale: {x: 2.5, y: 5, z: 0.03}
   m_Children:
   - {fileID: 6408185290469735973}
   - {fileID: 6408185289489327984}
@@ -276,19 +304,42 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!58 &6408185290650800988
-CircleCollider2D:
+--- !u!65 &1385113179
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408185290650800990}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 6.009724}
+  m_Center: {x: -0.000001190323, y: 0, z: 4.8932633}
+--- !u!114 &1385113182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6408185290650800990}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b5ba34f8eed2cf44966a9298714b585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1385113183
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6408185290650800990}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.005924225, y: 0.23584867}
-  serializedVersion: 2
-  m_Radius: 0.25109482
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 748d910d69d3c064c9007ac6c6d32d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cur_time: 0
+  t: 1

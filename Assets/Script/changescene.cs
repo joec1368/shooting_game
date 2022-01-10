@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class changescene : MonoBehaviour , IPointerClickHandler
 {
     public int number = 2;
+    public GameObject player;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,7 @@ public class changescene : MonoBehaviour , IPointerClickHandler
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            player.SetActive(false);
             SceneManager.LoadScene(0);
         }
         
