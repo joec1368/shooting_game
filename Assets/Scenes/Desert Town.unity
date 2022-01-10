@@ -2252,7 +2252,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4EBA\u5F62\u9776\uFF1A"
+  m_Text: "\u4EBA\u5F62\u9776\uFF1A50"
 --- !u!222 &796064990
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3133,7 +3133,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u5713\u9776\uFF1A"
+  m_Text: "\u5713\u9776\uFF1A10"
 --- !u!222 &1093293872
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5559,6 +5559,14 @@ PrefabInstance:
     - target: {fileID: 6408185290650800989, guid: 55546054eea4bea46aac3ffdd110a93c, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408185290650800989, guid: 55546054eea4bea46aac3ffdd110a93c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408185290650800989, guid: 55546054eea4bea46aac3ffdd110a93c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6408185290650800989, guid: 55546054eea4bea46aac3ffdd110a93c, type: 3}
       propertyPath: m_LocalPosition.x
