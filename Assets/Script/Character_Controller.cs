@@ -29,7 +29,7 @@ public class Character_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;//cursor
+        //Cursor.lockState = CursorLockMode.Locked;//cursor
         isrun = false; isjump = false; reload = false; fire = false; slide = false;
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -94,9 +94,11 @@ public class Character_Controller : MonoBehaviour
         ///cursor
         yaw -= speedH * Input.GetAxis("Mouse Y");
         pitch += speedV * Input.GetAxis("Mouse X");
-        transform.eulerAngles = new Vector3(yaw, pitch, 0f);
+        if (yaw > 22) yaw = 22;
+        else if (yaw < -30) yaw = -30;
+        transform.eulerAngles = new Vector3(0f, pitch, 0f);
+        cam.transform.eulerAngles = new Vector3(yaw, pitch, 0f);
         ///shoot
-
     }
     void ShootLinear()
     {
