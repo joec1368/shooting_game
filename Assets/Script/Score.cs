@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class Score : MonoBehaviour
 {
     public Text text;
-    public static float score = 0;
+    public static float score;
     // Start is called before the first frame update
     void Start()
     {
+        score = 0;
         text = GetComponent<Text>();
         text.text = "Score: " + score.ToString();
     }
